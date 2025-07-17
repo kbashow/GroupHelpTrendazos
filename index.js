@@ -95,7 +95,6 @@ if (!fs.existsSync(pluginsPath)) {
 }
 
 
-    } )
 
 
     
