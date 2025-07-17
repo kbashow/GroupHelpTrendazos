@@ -70,20 +70,30 @@ async function main()
     var {GHbot, TGbot, db} = await LGHelpBot(config);
     
 
-    //load modules and run their function
-    console.log( "Loading modules..." )
-    var directory = fs.readdirSync( __dirname + "/plugins/" );
-    directory.forEach( (fileName) => {
+console.log("Loading modules...");
+const pluginsPath = __dirname + "/plugins";
+if (!fs.existsSync(pluginsPath)) {
+    console.log("❌ No existe la carpeta de plugins.");
+} else {
+    try {
+        const directory = fs.readdirSync(pluginsPath);
+        console.log("📦 Archivos encontrados en /plugins:", directory);
 
-        var func = require( __dirname + "/plugins/" + fileName );
-        try {
-            func({GHbot : GHbot, TGbot : TGbot, db : db, config : config})
-        } catch (error) {
-            console.log("The plugin " + fileName + " is crashed, i will turn it off and log here the error");
-            console.log(error);
-        }
-        
-        console.log( "\tloaded " + fileName)
+        directory.forEach((fileName) => {
+            try {
+                const func = require(pluginsPath + "/" + fileName);
+                func({ GHbot, TGbot, db, config });
+                console.log("✅ Plugin cargado:", fileName);
+            } catch (error) {
+                console.log("❌ Error al cargar el plugin:", fileName);
+                console.error(error);
+            }
+        });
+    } catch (err) {
+        console.error("❌ Error al leer la carpeta /plugins:", err);
+    }
+}
+
 
     } )
 
@@ -107,3 +117,4 @@ async function main()
 }
 main();
 
+log para detectar plugins rotos
