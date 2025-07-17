@@ -5,7 +5,14 @@ global.directory = __dirname; //used from /api/database.js
 const fs = require("fs");
 const TR = require("./api/tg/tagResolver.js");
 const cp = require("./api/external/cryptoPrices.js");
-const config = JSON.parse( fs.readFileSync( __dirname + "/config.json" ) );
+const rawConfig = JSON.parse(fs.readFileSync(__dirname + "/config.json"));
+
+const config = {
+    ...rawConfig,
+    botToken: process.env.BOT_TOKEN || rawConfig.botToken,
+    botStaff: process.env.OWNER_ID ? [process.env.OWNER_ID] : rawConfig.botStaff
+};
+
 
 console.log("Starting...")
 console.log( "Libre group help current version: " + global.LGHVersion )
