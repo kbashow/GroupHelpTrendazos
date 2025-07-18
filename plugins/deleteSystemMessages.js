@@ -1,6 +1,8 @@
 module.exports = ({ TGbot }) => {
-  TGbot.on('message', async (msg) => {
-    const chatId = msg.chat.id;
+  TGbot.on("message", async (msg) => {
+    const chatId = msg.chat?.id;
+
+    if (!chatId) return;
 
     const isSystemMsg =
       msg.new_chat_members ||
@@ -14,7 +16,10 @@ module.exports = ({ TGbot }) => {
         await TGbot.deleteMessage(chatId, msg.message_id);
         console.log(`[deleteSystemMessages] Mensaje del sistema eliminado en ${chatId}`);
       } catch (error) {
-        console.error(`[deleteSystemMessages] Error al eliminar mensaje en ${chatId}:`, error.description);
+        console.error(
+          `[deleteSystemMessages] Error al eliminar mensaje en ${chatId}:`,
+          error?.description || error
+        );
       }
     }
   });
