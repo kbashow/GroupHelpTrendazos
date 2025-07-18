@@ -1,25 +1,25 @@
 module.exports = ({ GHbot, TGbot, db, config }) => {
   const settingKey = "deleteSystemMessages";
 
-  // Este hook asegura que se registre en el momento correcto
-  GHbot.onLoad(() => {
-    GHbot.addOption(settingKey, {
-      type: "bool",
-      default: false,
-      menuText: "🗑 Delete System Messages",
-      menuOrder: 99,
-      infoText: "Automatically deletes system messages (join, leave, etc.)"
-    });
+  GHbot.registerPlugin({
+    name: "systemdeleter",
+    settings: [
+      {
+        key: settingKey,
+        type: "bool",
+        default: false,
+        menuText: "🗑 Delete System Messages",
+        menuOrder: 999,
+        infoText: "Automatically deletes system messages (join, leave, etc.)"
+      }
+    ]
   });
 
-  // Escucha mensajes entrantes
   TGbot.on("message", async (msg) => {
     const chatId = msg.chat.id;
 
-    // Solo aplica en grupos o supergrupos
     if (msg.chat.type !== "group" && msg.chat.type !== "supergroup") return;
 
-    // Verificar si está activada la opción
     const settings = await db.get(chatId);
     if (!settings || !settings[settingKey]) return;
 
