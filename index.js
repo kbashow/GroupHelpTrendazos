@@ -116,4 +116,4 @@ if (!fs.existsSync(pluginsPath)) {
 }
 main();
 
-log para detectar plugins rotos
+
